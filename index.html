@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+	<! –– Estilo para visuakizar en la pagina web ––>
+
+		<style>
+			#map {
+				width: 100%;
+				height: 600px;
+				box-shadow: 5px 5px 5px #888;
+			}
+		</style>
+
+</head>
+
+<body>
+	<div id="map"></div>
+
+	<script>
+		var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+
+				+ 'contributors', maxZoom: 18
+
+		});
+
+		var cities = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+			layers: 'ciudades',
+			format: 'image/png',
+			transparent: true,
+			tiled: true,
+			attribution: "Natural Earth"
+
+		});
+
+		var hidro = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+			layers: 'hidrografia',
+			format: 'image/png',
+			transparent: true,
+			tiled: true,
+			attribution: "Natural Earth"
+
+		});
+
+		var pais = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+			layers: 'paises',
+			format: 'image/png',
+			transparent: true,
+			tiled: true,
+			attribution: "Natural Earth"
+
+		});
+
+
+		var map = L.map('map', {
+			center: [1.614433, -75.609455],
+			zoom: 13,
+			layers: [osm, hidro, cities],
+
+			scrollWheelZoom: false,
+		});
+
+		//======================MARCADORES======================
+		var markerUA = L.marker([1.620385, -75.604305], {
+			draggable: false,
+			title: 'pincha aquí'
+		}).addTo(map)
+			.bindPopup('Universidad de La Amazonia')
+			.openPopup();
+
+		var markerAL = L.marker([1.615030, -75.613918], {
+			draggable: false,
+			title: 'pincha aquí'
+		}).addTo(map)
+			.bindPopup('Alcaldia Municipal')
+			.openPopup();
+
+		var markerPL = L.marker([1.614929, -75.613238], {
+			draggable: false,
+			title: 'pincha aquí'
+		}).addTo(map)
+			.bindPopup('Plaza Santander')
+			.openPopup();
+
+
+		//======================CAPAS VECTORIALES======================
+
+		//Añadir contorno para la Alcaldia de Florencia
+		var circle = L.circle([1.615030, -75.613918], 500, {
+			color: 'red',
+			fillColor: '#f03',
+			fillOpacity: 0.5
+		}).addTo(map);
+
+		//Añadir delimitacion de Plaza Santander
+		var polygon = L.polygon([
+			[1.615150, -75.613648],
+			[1.615350, -75.613010],
+			[1.614721, -75.612814],
+			[1.614521, -75.613454]
+
+		]).addTo(map);
+
+		//Añadir ruta con lineas
+		var point1 = new L.LatLng(1.619791, -75.602780);
+		var point2 = new L.LatLng(1.619911, -75.602680);
+		var point3 = new L.LatLng(1.619740, -75.602457);
+		var point4 = new L.LatLng(1.618935, -75.600688);
+		var point5 = new L.LatLng(1.620168, -75.599524);
+		var point6 = new L.LatLng(1.620117, -75.597973);
+		var point7 = new L.LatLng(1.621222, -75.597888);
+		var point8 = new L.LatLng(1.621187, -75.597425);
+		var point9 = new L.LatLng(1.621376, -75.597408);
+		var latlngs = [point1, point2, point3, point4, point5, point6, point7, point8, point9];
+		var polyline = L.polyline(
+			latlngs, { color: 'red' }
+		)
+			.addTo(map)
+			.bindPopup('Ruta universidad a mi casa, Yimmy Muñoz');
+
+
+		L.control.scale().addTo(map);
+
+
+	</script>
+</body>
+
+</html>
